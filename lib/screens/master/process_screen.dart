@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../models/master/process_model.dart';
 import '../../widgets/table_column_config.dart';
 
@@ -20,22 +21,7 @@ class _ProcessScreenState extends State<ProcessScreen> {
 
   void _loadData() {
     // Dữ liệu mẫu
-    processList = [
-      ProcessModel(
-        stt: 1,
-        maSanPham: 'SP001',
-        maCongDoan: 'CD_A1',
-        ngayTao: DateTime.now().subtract(const Duration(days: 3)),
-        nguoiTao: 'Admin',
-      ),
-      ProcessModel(
-        stt: 2,
-        maSanPham: 'SP002',
-        maCongDoan: 'CD_B2',
-        ngayTao: DateTime.now().subtract(const Duration(days: 1)),
-        nguoiTao: 'User1',
-      ),
-    ];
+    processList = ProcessModel.mockData();
   }
 
   bool _searchFilter(ProcessModel item, String query) {
