@@ -14,7 +14,7 @@ class _DetailScreenState extends State<DetailScreen> {
   late List<DetailModel> _filteredDetails;
   bool _sortAscending = true;
   int _sortColumnIndex = 0;
-  TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -56,7 +56,6 @@ class _DetailScreenState extends State<DetailScreen> {
     DetailModel? item,
   ) async {
     final isEditing = item != null;
-
     final maCtrl = TextEditingController(text: item?.maChiTiet ?? '');
     final tenCtrl = TextEditingController(text: item?.tenChiTiet ?? '');
     final nhomCtrl = TextEditingController(text: item?.nhomChiTiet ?? '');
@@ -92,6 +91,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   controller: nhomCtrl,
                   decoration: const InputDecoration(labelText: 'Nhóm chi tiết'),
                 ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(
@@ -103,7 +103,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: TextField(
                         controller: donViTrongLuongCtrl,
@@ -114,6 +114,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
                 TextField(
                   controller: donViChiTietCtrl,
                   decoration: const InputDecoration(
@@ -164,7 +165,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   );
                   _details.add(newItem);
                 }
-                _filterSearch(searchController.text); // refresh filtered list
+                _filterSearch(searchController.text);
               });
               Navigator.pop(context);
             },
@@ -190,7 +191,7 @@ class _DetailScreenState extends State<DetailScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            // Search + Import/Export + Add
+            // Search + Add + Import/Export
             Row(
               children: [
                 Expanded(
@@ -208,7 +209,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     onChanged: _filterSearch,
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -217,7 +218,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   icon: const Icon(Icons.add),
                   label: const Text('Thêm'),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange.shade700,
@@ -226,7 +227,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   icon: const Icon(Icons.upload_file),
                   label: const Text('Import'),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade700,
@@ -240,7 +241,7 @@ class _DetailScreenState extends State<DetailScreen> {
             const SizedBox(height: 12),
             Expanded(
               child: Card(
-                elevation: 2,
+                elevation: 3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -250,104 +251,102 @@ class _DetailScreenState extends State<DetailScreen> {
                     constraints: BoxConstraints(
                       minWidth: MediaQuery.of(context).size.width,
                     ),
-                    child: DataTable(
-                      headingRowColor: MaterialStateProperty.all(
-                        Colors.blue.shade800,
-                      ),
-                      headingTextStyle: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      dataRowColor: MaterialStateProperty.resolveWith<Color?>((
-                        Set<MaterialState> states,
-                      ) {
-                        if (states.contains(MaterialState.hovered)) {
-                          return Colors.blue.shade50;
-                        }
-                        return null; // default
-                      }),
-                      sortAscending: _sortAscending,
-                      sortColumnIndex: _sortColumnIndex,
-                      columns: [
-                        DataColumn(
-                          label: const Text('STT'),
-                          numeric: true,
-                          onSort: (index, asc) =>
-                              _sort<num>((d) => d.stt, index, asc),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: DataTable(
+                        headingRowColor: MaterialStateProperty.all(
+                          Colors.blue.shade800,
                         ),
-                        DataColumn(
-                          label: const Text('Mã chi tiết'),
-                          onSort: (index, asc) =>
-                              _sort<String>((d) => d.maChiTiet, index, asc),
+                        headingTextStyle: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        DataColumn(
-                          label: const Text('Tên chi tiết'),
-                          onSort: (index, asc) =>
-                              _sort<String>((d) => d.tenChiTiet, index, asc),
+                        dataRowColor: MaterialStateProperty.resolveWith<Color?>(
+                          (states) {
+                            if (states.contains(MaterialState.hovered))
+                              return Colors.blue.shade50;
+                            return null;
+                          },
                         ),
-                        DataColumn(
-                          label: const Text('Nhóm chi tiết'),
-                          onSort: (index, asc) =>
-                              _sort<String>((d) => d.nhomChiTiet, index, asc),
-                        ),
-                        DataColumn(label: const Text('Đơn vị chi tiết')),
-                        DataColumn(
-                          label: const Text('Trọng lượng'),
-                          numeric: true,
-                        ),
-                        DataColumn(label: const Text('Đơn vị trọng lượng')),
-                        DataColumn(label: const Text('Người tạo')),
-                        DataColumn(label: const Text('Ngày tạo')),
-                        const DataColumn(label: Text('Hành động')),
-                      ],
-                      rows: _filteredDetails
-                          .map(
-                            (d) => DataRow(
-                              cells: [
-                                DataCell(Text(d.stt.toString())),
-                                DataCell(Text(d.maChiTiet)),
-                                DataCell(Text(d.tenChiTiet)),
-                                DataCell(Text(d.nhomChiTiet)),
-                                DataCell(Text(d.donViChiTiet)),
-                                DataCell(Text(d.trongLuong.toString())),
-                                DataCell(Text(d.donViTrongLuong)),
-                                DataCell(Text(d.nguoiTao)),
-                                DataCell(
-                                  Text(
-                                    d.ngayTao
-                                        .toIso8601String()
-                                        .split('T')
-                                        .first,
-                                  ),
+                        sortAscending: _sortAscending,
+                        sortColumnIndex: _sortColumnIndex,
+                        // columnSpacing: 25,
+                        columns: [
+                          DataColumn(
+                            label: const Text('STT'),
+                            numeric: true,
+                            onSort: (i, asc) =>
+                                _sort<num>((d) => d.stt, i, asc),
+                          ),
+                          DataColumn(
+                            label: const Text('Mã chi tiết'),
+                            onSort: (i, asc) =>
+                                _sort<String>((d) => d.maChiTiet, i, asc),
+                          ),
+                          DataColumn(
+                            label: const Text('Tên chi tiết'),
+                            onSort: (i, asc) =>
+                                _sort<String>((d) => d.tenChiTiet, i, asc),
+                          ),
+                          DataColumn(
+                            label: const Text('Nhóm chi tiết'),
+                            onSort: (i, asc) =>
+                                _sort<String>((d) => d.nhomChiTiet, i, asc),
+                          ),
+                          const DataColumn(label: Text('Đơn vị chi tiết')),
+                          const DataColumn(
+                            label: Text('Trọng lượng'),
+                            numeric: true,
+                          ),
+                          const DataColumn(label: Text('Đơn vị trọng lượng')),
+                          const DataColumn(label: Text('Người tạo')),
+                          const DataColumn(label: Text('Ngày tạo')),
+                          const DataColumn(label: Text('Hành động')),
+                        ],
+                        rows: _filteredDetails.map((d) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Text(d.stt.toString())),
+                              DataCell(Text(d.maChiTiet)),
+                              DataCell(Text(d.tenChiTiet)),
+                              DataCell(Text(d.nhomChiTiet)),
+                              DataCell(Text(d.donViChiTiet)),
+                              DataCell(Text(d.trongLuong.toString())),
+                              DataCell(Text(d.donViTrongLuong)),
+                              DataCell(Text(d.nguoiTao)),
+                              DataCell(
+                                Text(
+                                  d.ngayTao.toIso8601String().split('T').first,
                                 ),
-                                DataCell(
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                          color: Colors.blue,
-                                        ),
-                                        onPressed: () =>
-                                            _showAddOrEditDialog(context, d),
+                              ),
+                              DataCell(
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
                                       ),
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
-                                        onPressed: () => setState(() {
-                                          _details.remove(d);
-                                          _filterSearch(searchController.text);
-                                        }),
+                                      onPressed: () =>
+                                          _showAddOrEditDialog(context, d),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
                                       ),
-                                    ],
-                                  ),
+                                      onPressed: () => setState(() {
+                                        _details.remove(d);
+                                        _filterSearch(searchController.text);
+                                      }),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )
-                          .toList(),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ),
