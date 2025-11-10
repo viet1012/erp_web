@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class DetailModel {
   final int stt;
   final String maChiTiet;
@@ -59,5 +57,24 @@ class DetailModel {
       'NgayCapNhat': ngayCapNhat?.toIso8601String(),
       'NguoiCapNhat': nguoiCapNhat,
     };
+  }
+
+  /// ================= MOCK DATA =================
+  static List<DetailModel> mockData() {
+    return List.generate(20, (index) {
+      return DetailModel(
+        stt: index + 1,
+        maChiTiet: 'CT-${1000 + index}',
+        tenChiTiet: 'Chi tiết ${index + 1}',
+        nhomChiTiet: index % 2 == 0 ? 'Nhóm A' : 'Nhóm B',
+        donViChiTiet: 'Cái',
+        trongLuong: (index + 1) * 1.5,
+        donViTrongLuong: 'kg',
+        ngayTao: DateTime.now().subtract(Duration(days: index * 2)),
+        nguoiTao: 'Admin',
+        ngayCapNhat: DateTime.now().subtract(Duration(days: index)),
+        nguoiCapNhat: 'User${index % 3 + 1}',
+      );
+    });
   }
 }
