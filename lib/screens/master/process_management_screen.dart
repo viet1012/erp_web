@@ -1,5 +1,5 @@
+import 'package:erp_web/screens/master/process_screen.dart';
 import 'package:flutter/material.dart';
-import 'process_screen.dart';
 import 'process_code_screen.dart';
 
 class ProcessManagementScreen extends StatefulWidget {
@@ -47,6 +47,7 @@ class _ProcessManagementScreenState extends State<ProcessManagementScreen>
               labelStyle: const TextStyle(
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.2,
+                fontSize: 16,
               ),
               unselectedLabelStyle: const TextStyle(
                 fontWeight: FontWeight.w500,
@@ -61,7 +62,7 @@ class _ProcessManagementScreenState extends State<ProcessManagementScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [ProcessScreen(), ProcessCodeScreen()],
+        children: [ProcessScreen(), ProcessCodeScreen()],
       ),
     );
   }

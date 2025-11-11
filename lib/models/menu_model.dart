@@ -39,27 +39,31 @@ class MenuModel {
 }
 
 final List<MenuModel> menuList = [
-  MenuModel('Tổng quan'),
+  MenuModel('Tổng quan', [], Icons.dashboard),
 
   MenuModel('Quản lý đơn hàng', [
-    MenuModel('Danh sách báo giá'),
-    MenuModel('Danh sách đơn hàng'),
-    MenuModel('Tiến độ đơn hàng'),
-    MenuModel('Đơn hàng xuất'),
-  ]),
+    MenuModel('Danh sách báo giá', [], Icons.format_list_bulleted),
+    MenuModel('Danh sách đơn hàng', [], Icons.shopping_cart),
+    MenuModel('Tiến độ đơn hàng', [], Icons.timelapse),
+    MenuModel('Đơn hàng xuất', [], Icons.local_shipping),
+  ], Icons.assignment),
 
-  MenuModel('Quản lý kho', [
-    MenuModel('Kho vật liệu'),
-    MenuModel('Kho dụng cụ'),
-    MenuModel('Kho bán thành phẩm'),
-  ]),
+  MenuModel(
+    'Quản lý kho',
+    [
+      MenuModel('Kho vật liệu', [], Icons.store),
+      MenuModel('Kho dụng cụ', [], Icons.build),
+      MenuModel('Kho bán thành phẩm', [], Icons.all_inbox),
+    ],
+    Icons.warehouse,
+  ), // warehouse icon cần thêm package font_awesome hoặc thay icon khác
 
   MenuModel('Quản lý master', [
-    MenuModel('Sản phẩm'),
-    MenuModel('Chi tiết'),
-    MenuModel('Định mức'),
-    MenuModel('Đơn giá'),
-    MenuModel('Công đoạn'),
-    MenuModel('Khách hàng'),
-  ]),
+    MenuModel('Sản phẩm', [], Icons.production_quantity_limits),
+    MenuModel('Chi tiết', [], Icons.details),
+    MenuModel('Định mức', [], Icons.assignment_turned_in),
+    MenuModel('Đơn giá', [], Icons.price_check),
+    MenuModel('Công đoạn', [], Icons.settings),
+    MenuModel('Khách hàng', [], Icons.people),
+  ], Icons.manage_accounts),
 ];

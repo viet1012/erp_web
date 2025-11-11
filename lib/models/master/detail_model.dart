@@ -8,7 +8,7 @@ class DetailModel {
   final String donViTrongLuong;
   final DateTime ngayTao;
   final String nguoiTao;
-  final DateTime? ngayCapNhat;
+  final DateTime ngayCapNhat;
   final String? nguoiCapNhat;
 
   DetailModel({
@@ -21,7 +21,7 @@ class DetailModel {
     required this.donViTrongLuong,
     required this.ngayTao,
     required this.nguoiTao,
-    this.ngayCapNhat,
+    required this.ngayCapNhat,
     this.nguoiCapNhat,
   });
 
@@ -36,9 +36,8 @@ class DetailModel {
       donViTrongLuong: json['DonVi_TrongLuong'] ?? '',
       ngayTao: DateTime.tryParse(json['NgayTao'] ?? '') ?? DateTime.now(),
       nguoiTao: json['NguoiTao'] ?? '',
-      ngayCapNhat: json['NgayCapNhat'] != null
-          ? DateTime.tryParse(json['NgayCapNhat'])
-          : null,
+      ngayCapNhat:
+          DateTime.tryParse(json['NgayCapNhat'] ?? '') ?? DateTime.now(),
       nguoiCapNhat: json['NguoiCapNhat'],
     );
   }
@@ -61,19 +60,53 @@ class DetailModel {
 
   /// ================= MOCK DATA =================
   static List<DetailModel> mockData() {
+    final nhomChiTietList = [
+      'Chi tiết Trục',
+      'Chi tiết Bánh răng',
+      'Chi tiết Vỏ hộp',
+      'Chi tiết Càng gạt',
+      'Chi tiết Bulong – Ốc vít',
+    ];
+
+    final tenChiTietList = [
+      'Trục cam',
+      'Trục vít me',
+      'Bánh răng chủ động',
+      'Bánh răng bị động',
+      'Vỏ hộp giảm tốc',
+      'Càng gạt ly hợp',
+      'Bạc đỡ trục',
+      'Đĩa xích',
+      'Trục truyền động',
+      'Trục trung gian',
+      'Bu lông M10',
+      'Bu lông M8',
+      'Chốt định vị',
+      'Bánh đai',
+      'Trục ren',
+      'Ốc hãm',
+      'Bạc lót',
+      'Bánh vít',
+      'Càng quay',
+      'Nắp bảo vệ',
+    ];
+
     return List.generate(20, (index) {
+      final rawWeight = (index + 1) * 0.85 + 0.5;
+      final roundedWeight = double.parse(rawWeight.toStringAsFixed(2));
+
       return DetailModel(
         stt: index + 1,
-        maChiTiet: 'CT-${1000 + index}',
-        tenChiTiet: 'Chi tiết ${index + 1}',
-        nhomChiTiet: index % 2 == 0 ? 'Nhóm A' : 'Nhóm B',
+        maChiTiet: 'CK-${1000 + index}',
+        tenChiTiet: tenChiTietList[index],
+        nhomChiTiet: nhomChiTietList[index % nhomChiTietList.length],
         donViChiTiet: 'Cái',
-        trongLuong: (index + 1) * 1.5,
-        donViTrongLuong: 'kg',
+        trongLuong: roundedWeight,
+        donViTrongLuong: 'Kg',
         ngayTao: DateTime.now().subtract(Duration(days: index * 2)),
-        nguoiTao: 'Admin',
+        nguoiTao: 'KTV${(index % 3) + 1}',
         ngayCapNhat: DateTime.now().subtract(Duration(days: index)),
-        nguoiCapNhat: 'User${index % 3 + 1}',
+        nguoiCapNhat: 'Admin',
       );
     });
   }

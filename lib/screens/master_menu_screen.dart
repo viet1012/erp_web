@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../models/menu_model.dart';
 import '../widgets/menu_expansion_tile.dart';
+import '../widgets/user_avatar.dart';
 import 'dashboard/dashboard_screen.dart';
 import 'master/customer_screen.dart';
 import 'master/detail_screen.dart';
@@ -64,6 +65,9 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
     }
   }
 
+  final String userName = "Nguyễn Văn An";
+  final String? userAvatar = null; // hoặc "https://..."
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +76,7 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
         children: [
           // Sidebar
           Container(
-            width: 280,
+            width: 240,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -121,21 +125,21 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Quản lý',
+                              'Quản Lí ERP',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 0.5,
                               ),
                             ),
-                            Text(
-                              'Hệ thống',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
-                              ),
-                            ),
+                            // Text(
+                            //   'Hệ thống',
+                            //   style: TextStyle(
+                            //     color: Colors.white70,
+                            //     fontSize: 12,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -212,21 +216,19 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
                         ),
                       ],
                       const Spacer(),
-                      IconButton(
-                        icon: Icon(Icons.search, color: Colors.grey[600]),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.grey[600],
-                        ),
-                        onPressed: () {},
-                      ),
+
                       const SizedBox(width: 8),
-                      CircleAvatar(
-                        backgroundColor: Colors.blue[100],
-                        child: Icon(Icons.person, color: Colors.blue[700]),
+
+                      UserInfoRow(
+                        fullName: "Micheal",
+                        avatarUrl:
+                            "https://res.cloudinary.com/daokpmwm4/image/upload/v1761292096/samples/man-portrait.jpg", // hoặc null
+                        avatarRadius: 22,
+                        nameStyle: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        spacing: 14,
                       ),
                     ],
                   ),

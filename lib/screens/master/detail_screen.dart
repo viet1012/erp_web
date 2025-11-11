@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../models/master/detail_model.dart';
+import '../../models/master/detail_model.dart'; // bạn nhớ sửa path đúng với model mới
+import '../../widgets/custom_app_bar.dart';
+import '../../widgets/group_action_buttons.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key});
@@ -19,7 +20,8 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    _details = DetailModel.mockData();
+    _details =
+        DetailModel.mockData(); // bạn tự tạo hàm mockData() trong model hoặc thay bằng dữ liệu thật
     _filteredDetails = List.from(_details);
   }
 
@@ -56,6 +58,10 @@ class _DetailScreenState extends State<DetailScreen> {
     DetailModel? item,
   ) async {
     final isEditing = item != null;
+
+    final sttCtrl = TextEditingController(
+      text: isEditing ? item!.stt.toString() : (_details.length + 1).toString(),
+    );
     final maCtrl = TextEditingController(text: item?.maChiTiet ?? '');
     final tenCtrl = TextEditingController(text: item?.tenChiTiet ?? '');
     final nhomCtrl = TextEditingController(text: item?.nhomChiTiet ?? '');
@@ -63,11 +69,12 @@ class _DetailScreenState extends State<DetailScreen> {
       text: item?.donViChiTiet ?? '',
     );
     final trongLuongCtrl = TextEditingController(
-      text: item?.trongLuong.toString() ?? '',
+      text: isEditing ? item!.trongLuong.toString() : '',
     );
     final donViTrongLuongCtrl = TextEditingController(
-      text: item?.donViTrongLuong ?? '',
+      text: item?.donViTrongLuong ?? 'kg',
     );
+    final nguoiTaoCtrl = TextEditingController(text: item?.nguoiTao ?? 'Admin');
 
     await showDialog(
       context: context,
@@ -80,6 +87,11 @@ class _DetailScreenState extends State<DetailScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
+                  controller: sttCtrl,
+                  enabled: false,
+                  decoration: const InputDecoration(labelText: 'STT'),
+                ),
+                TextField(
                   controller: maCtrl,
                   decoration: const InputDecoration(labelText: 'Mã chi tiết'),
                 ),
@@ -91,35 +103,28 @@ class _DetailScreenState extends State<DetailScreen> {
                   controller: nhomCtrl,
                   decoration: const InputDecoration(labelText: 'Nhóm chi tiết'),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: trongLuongCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Trọng lượng',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextField(
-                        controller: donViTrongLuongCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'Đơn vị trọng lượng',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
                 TextField(
                   controller: donViChiTietCtrl,
                   decoration: const InputDecoration(
                     labelText: 'Đơn vị chi tiết',
                   ),
+                ),
+                TextField(
+                  controller: trongLuongCtrl,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Trọng lượng (kg)',
+                  ),
+                ),
+                TextField(
+                  controller: donViTrongLuongCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Đơn vị trọng lượng',
+                  ),
+                ),
+                TextField(
+                  controller: nguoiTaoCtrl,
+                  decoration: const InputDecoration(labelText: 'Người tạo'),
                 ),
               ],
             ),
@@ -133,21 +138,35 @@ class _DetailScreenState extends State<DetailScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             onPressed: () {
+              final stt = int.tryParse(sttCtrl.text) ?? (_details.length + 1);
+              final trongLuong = double.tryParse(trongLuongCtrl.text) ?? 0;
+
+              if (maCtrl.text.isEmpty ||
+                  tenCtrl.text.isEmpty ||
+                  nhomCtrl.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Vui lòng điền đầy đủ thông tin'),
+                  ),
+                );
+                return;
+              }
+
               setState(() {
                 if (isEditing) {
                   final index = _details.indexOf(item!);
                   _details[index] = DetailModel(
-                    stt: item.stt,
+                    stt: stt,
                     maChiTiet: maCtrl.text,
                     tenChiTiet: tenCtrl.text,
                     nhomChiTiet: nhomCtrl.text,
                     donViChiTiet: donViChiTietCtrl.text,
-                    trongLuong: double.tryParse(trongLuongCtrl.text) ?? 0,
+                    trongLuong: trongLuong,
                     donViTrongLuong: donViTrongLuongCtrl.text,
                     ngayTao: item.ngayTao,
-                    nguoiTao: item.nguoiTao,
+                    nguoiTao: nguoiTaoCtrl.text,
                     ngayCapNhat: DateTime.now(),
-                    nguoiCapNhat: 'Admin',
+                    nguoiCapNhat: nguoiTaoCtrl.text,
                   );
                 } else {
                   final newItem = DetailModel(
@@ -156,17 +175,17 @@ class _DetailScreenState extends State<DetailScreen> {
                     tenChiTiet: tenCtrl.text,
                     nhomChiTiet: nhomCtrl.text,
                     donViChiTiet: donViChiTietCtrl.text,
-                    trongLuong: double.tryParse(trongLuongCtrl.text) ?? 0,
+                    trongLuong: trongLuong,
                     donViTrongLuong: donViTrongLuongCtrl.text,
                     ngayTao: DateTime.now(),
-                    nguoiTao: 'Admin',
-                    ngayCapNhat: null,
-                    nguoiCapNhat: null,
+                    nguoiTao: nguoiTaoCtrl.text,
+                    ngayCapNhat: DateTime.now(),
                   );
                   _details.add(newItem);
                 }
                 _filterSearch(searchController.text);
               });
+
               Navigator.pop(context);
             },
             child: const Text('Lưu'),
@@ -176,22 +195,48 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Future<void> _exportToExcel() async {}
+  int get totalDetails => _filteredDetails.length;
 
-  Future<void> _importFromExcel() async {}
+  double get totalWeight {
+    double total = 0;
+    for (var d in _filteredDetails) {
+      total += d.trongLuong;
+    }
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Danh sách Chi tiết'),
-        backgroundColor: Colors.blue.shade800,
+      appBar: const CustomAppBar(
+        title: 'Danh sách Chi tiết',
+        backgroundColor: Color(0xFF1565C0),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            // Search + Add + Import/Export
+            // SUMMARY
+            Card(
+              margin: EdgeInsets.zero,
+              color: Colors.blue.shade50,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildSummaryItem('Tổng chi tiết', totalDetails.toString()),
+                    _buildSummaryItem(
+                      'Tổng trọng lượng (kg)',
+                      totalWeight.toStringAsFixed(2),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // SEARCH + BUTTONS
             Row(
               children: [
                 Expanded(
@@ -210,142 +255,158 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  onPressed: () => _showAddOrEditDialog(context, null),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Thêm'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange.shade700,
-                  ),
-                  onPressed: _importFromExcel,
-                  icon: const Icon(Icons.upload_file),
-                  label: const Text('Import'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                  ),
-                  onPressed: _exportToExcel,
-                  icon: const Icon(Icons.download),
-                  label: const Text('Export'),
+                GroupActionButtons(
+                  onAdd: () => _showAddOrEditDialog(context, null),
+                  onImport: () {
+                    // Xử lý import ở đây
+                  },
+                  onExport: () {
+                    // Xử lý export ở đây
+                  },
                 ),
               ],
             ),
             const SizedBox(height: 12),
+
+            // TABLE
             Expanded(
               child: Card(
                 elevation: 3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: MediaQuery.of(context).size.width,
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.all(
-                          Colors.blue.shade800,
-                        ),
-                        headingTextStyle: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        dataRowColor: MaterialStateProperty.resolveWith<Color?>(
-                          (states) {
-                            if (states.contains(MaterialState.hovered))
-                              return Colors.blue.shade50;
-                            return null;
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: 1200),
+                      child: SingleChildScrollView(
+                        child: Table(
+                          border: TableBorder.all(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
+                          columnWidths: const {
+                            0: FixedColumnWidth(80), // STT
+                            1: FixedColumnWidth(150), // Mã chi tiết
+                            2: FixedColumnWidth(280), // Tên chi tiết
+                            3: FixedColumnWidth(200), // Nhóm chi tiết
+                            4: FixedColumnWidth(120), // Đơn vị chi tiết
+                            5: FixedColumnWidth(160), // Trọng lượng
+                            6: FixedColumnWidth(160), // Đơn vị trọng lượng
+                            7: FixedColumnWidth(130), // Người tạo
+                            8: FixedColumnWidth(120), // Ngày tạo
+                            9: FixedColumnWidth(140), // Ngày cập nhật
+                            10: FixedColumnWidth(100), // Hành động
                           },
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade800,
+                              ),
+                              children: [
+                                _headerCell(
+                                  'STT',
+                                  onTap: () => _sort<num>(
+                                    (d) => d.stt,
+                                    0,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell(
+                                  'Mã chi tiết',
+                                  onTap: () => _sort<String>(
+                                    (d) => d.maChiTiet,
+                                    1,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell(
+                                  'Tên chi tiết',
+                                  onTap: () => _sort<String>(
+                                    (d) => d.tenChiTiet,
+                                    2,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell(
+                                  'Nhóm chi tiết',
+                                  onTap: () => _sort<String>(
+                                    (d) => d.nhomChiTiet,
+                                    3,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell('Đơn vị chi tiết'),
+                                _headerCell(
+                                  'Trọng lượng (kg)',
+                                  onTap: () => _sort<num>(
+                                    (d) => d.trongLuong,
+                                    5,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell('Đơn vị trọng lượng'),
+                                _headerCell('Người tạo'),
+                                _headerCell(
+                                  'Ngày tạo',
+                                  onTap: () => _sort<DateTime>(
+                                    (d) => d.ngayTao,
+                                    8,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell(
+                                  'Ngày cập nhật',
+                                  onTap: () => _sort<DateTime>(
+                                    (d) => d.ngayCapNhat,
+                                    9,
+                                    !_sortAscending,
+                                  ),
+                                ),
+                                _headerCell('Hành động'),
+                              ],
+                            ),
+                            ..._filteredDetails.map((d) {
+                              return TableRow(
+                                decoration: BoxDecoration(
+                                  color: _filteredDetails.indexOf(d) % 2 == 0
+                                      ? Colors.grey.shade50
+                                      : Colors.white,
+                                ),
+                                children: [
+                                  _dataCell(d.stt.toString(), center: true),
+                                  _dataCell(d.maChiTiet),
+                                  _dataCell(d.tenChiTiet),
+                                  _dataCell(d.nhomChiTiet),
+                                  _dataCell(d.donViChiTiet, center: true),
+                                  _dataCell(
+                                    d.trongLuong.toStringAsFixed(2),
+                                    center: true,
+                                  ),
+                                  _dataCell(d.donViTrongLuong, center: true),
+                                  _dataCell(d.nguoiTao),
+                                  _dataCell(
+                                    d.ngayTao
+                                        .toIso8601String()
+                                        .split('T')
+                                        .first,
+                                    center: true,
+                                  ),
+                                  _dataCell(
+                                    d.ngayCapNhat
+                                        .toIso8601String()
+                                        .split('T')
+                                        .first,
+                                    center: true,
+                                  ),
+                                  _actionCell(context, d),
+                                ],
+                              );
+                            }).toList(),
+                          ],
                         ),
-                        sortAscending: _sortAscending,
-                        sortColumnIndex: _sortColumnIndex,
-                        // columnSpacing: 25,
-                        columns: [
-                          DataColumn(
-                            label: const Text('STT'),
-                            numeric: true,
-                            onSort: (i, asc) =>
-                                _sort<num>((d) => d.stt, i, asc),
-                          ),
-                          DataColumn(
-                            label: const Text('Mã chi tiết'),
-                            onSort: (i, asc) =>
-                                _sort<String>((d) => d.maChiTiet, i, asc),
-                          ),
-                          DataColumn(
-                            label: const Text('Tên chi tiết'),
-                            onSort: (i, asc) =>
-                                _sort<String>((d) => d.tenChiTiet, i, asc),
-                          ),
-                          DataColumn(
-                            label: const Text('Nhóm chi tiết'),
-                            onSort: (i, asc) =>
-                                _sort<String>((d) => d.nhomChiTiet, i, asc),
-                          ),
-                          const DataColumn(label: Text('Đơn vị chi tiết')),
-                          const DataColumn(
-                            label: Text('Trọng lượng'),
-                            numeric: true,
-                          ),
-                          const DataColumn(label: Text('Đơn vị trọng lượng')),
-                          const DataColumn(label: Text('Người tạo')),
-                          const DataColumn(label: Text('Ngày tạo')),
-                          const DataColumn(label: Text('Hành động')),
-                        ],
-                        rows: _filteredDetails.map((d) {
-                          return DataRow(
-                            cells: [
-                              DataCell(Text(d.stt.toString())),
-                              DataCell(Text(d.maChiTiet)),
-                              DataCell(Text(d.tenChiTiet)),
-                              DataCell(Text(d.nhomChiTiet)),
-                              DataCell(Text(d.donViChiTiet)),
-                              DataCell(Text(d.trongLuong.toString())),
-                              DataCell(Text(d.donViTrongLuong)),
-                              DataCell(Text(d.nguoiTao)),
-                              DataCell(
-                                Text(
-                                  d.ngayTao.toIso8601String().split('T').first,
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.blue,
-                                      ),
-                                      onPressed: () =>
-                                          _showAddOrEditDialog(context, d),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () => setState(() {
-                                        _details.remove(d);
-                                        _filterSearch(searchController.text);
-                                      }),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
                       ),
                     ),
                   ),
@@ -355,6 +416,81 @@ class _DetailScreenState extends State<DetailScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _headerCell(String text, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            if (onTap != null)
+              const Icon(Icons.arrow_upward, size: 16, color: Colors.white),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataCell(String text, {bool center = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      child: SelectableText(
+        text,
+        style: const TextStyle(fontSize: 16),
+        textAlign: center ? TextAlign.center : TextAlign.left,
+        // overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget _actionCell(BuildContext context, DetailModel d) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.edit, color: Colors.blue, size: 18),
+            onPressed: () => _showAddOrEditDialog(context, d),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red, size: 18),
+            onPressed: () => setState(() {
+              _details.remove(d);
+              _filterSearch(searchController.text);
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryItem(String label, String value) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 }

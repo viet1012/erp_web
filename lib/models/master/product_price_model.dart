@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:math';
 
 class ProductPriceModel {
   final int stt;
@@ -52,4 +53,35 @@ class ProductPriceModel {
       'NguoiCapNhat': nguoiCapNhat,
     };
   }
+
+  // 🧩 Mock data để test hiển thị
+  static List<ProductPriceModel> mockData = List.generate(20, (index) {
+    final random = Random();
+    final customers = ['KH001', 'KH002', 'KH003', 'KH004', 'KH005'];
+    final products = [
+      'SP001',
+      'SP002',
+      'SP003',
+      'SP004',
+      'SP005',
+      'SP006',
+      'SP007',
+      'SP008',
+    ];
+    final units = ['PCS', 'SET', 'BOX', 'KG', 'M'];
+
+    return ProductPriceModel(
+      stt: index + 1,
+      maSanPham: products[random.nextInt(products.length)],
+      maKhachHang: customers[random.nextInt(customers.length)],
+      donGia: (random.nextDouble() * 10000 + 5000).roundToDouble(),
+      donViSuDung: units[random.nextInt(units.length)],
+      ngayTao: DateTime.now().subtract(Duration(days: random.nextInt(100))),
+      nguoiTao: 'Admin${random.nextInt(3) + 1}',
+      ngayCapNhat: random.nextBool()
+          ? DateTime.now().subtract(Duration(days: random.nextInt(30)))
+          : null,
+      nguoiCapNhat: random.nextBool() ? 'User${random.nextInt(4) + 1}' : null,
+    );
+  });
 }
