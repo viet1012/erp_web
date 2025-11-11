@@ -11,6 +11,7 @@ import 'master/process_management_screen.dart';
 import 'master/process_screen.dart';
 import 'master/product_price_screen.dart';
 import 'master/product_screen.dart';
+import 'order/bao_gia_screen.dart';
 // Import các screen
 
 class MasterMenuScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
         return const DashboardScreen();
       // Quản lý đơn hàng
       case 'Danh sách báo giá':
-        return const QuoteListScreen();
+        return const BaoGiaScreen();
       case 'Danh sách đơn hàng':
         return const OrderListScreen();
       case 'Tiến độ đơn hàng':
@@ -64,9 +65,6 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
         return _buildWelcomeScreen();
     }
   }
-
-  final String userName = "Nguyễn Văn An";
-  final String? userAvatar = null; // hoặc "https://..."
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +123,7 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Quản Lí ERP',
+                              'Hệ thống ERP',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -133,13 +131,13 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
                                 letterSpacing: 0.5,
                               ),
                             ),
-                            // Text(
-                            //   'Hệ thống',
-                            //   style: TextStyle(
-                            //     color: Colors.white70,
-                            //     fontSize: 12,
-                            //   ),
-                            // ),
+                            Text(
+                              'Quản lý sản xuất',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -220,7 +218,7 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
                       const SizedBox(width: 8),
 
                       UserInfoRow(
-                        fullName: "Micheal",
+                        fullName: "Micheal Ta",
                         avatarUrl:
                             "https://res.cloudinary.com/daokpmwm4/image/upload/v1761292096/samples/man-portrait.jpg", // hoặc null
                         avatarRadius: 22,
@@ -289,82 +287,6 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
 
 // ========== 3. TEMPLATE CHO CÁC SCREEN KHÁC ==========
 // Copy template này cho các screen còn lại
-
-// File: lib/screens/order/quote_list_screen.dart
-class QuoteListScreen extends StatefulWidget {
-  const QuoteListScreen({super.key});
-
-  @override
-  State<QuoteListScreen> createState() => _QuoteListScreenState();
-}
-
-class _QuoteListScreenState extends State<QuoteListScreen> {
-  List<dynamic> data = [];
-  bool isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchQuotes();
-  }
-
-  Future<void> _fetchQuotes() async {
-    setState(() => isLoading = true);
-
-    // TODO: Gọi API
-    // final response = await http.get('api/quotes');
-    // setState(() => data = response.data);
-
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() => isLoading = false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Danh sách báo giá',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Thêm mới
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Thêm mới'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _buildDataTable(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDataTable() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: Text('Dữ liệu sẽ hiển thị ở đây sau khi gọi API'),
-      ),
-    );
-  }
-}
 
 // Tương tự tạo các class cho:
 class OrderListScreen extends StatelessWidget {
