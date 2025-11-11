@@ -448,11 +448,11 @@ class _NormScreenState extends State<NormScreen> {
   Widget _dataCell(String text, {bool center = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-      child: Text(
+      child: SelectableText(
         text,
         style: const TextStyle(fontSize: 16),
         textAlign: center ? TextAlign.center : TextAlign.left,
-        overflow: TextOverflow.ellipsis,
+        // overflow: TextOverflow.ellipsis,
       ),
     );
   }
