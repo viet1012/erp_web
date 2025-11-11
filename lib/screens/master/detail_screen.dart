@@ -217,24 +217,6 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Column(
           children: [
             // SUMMARY
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildSummaryItem('Tổng chi tiết', totalDetails.toString()),
-                    _buildSummaryItem(
-                      'Tổng trọng lượng (kg)',
-                      totalWeight.toStringAsFixed(2),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
 
             // SEARCH + BUTTONS
             Row(

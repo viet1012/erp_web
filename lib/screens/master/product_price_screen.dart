@@ -247,20 +247,6 @@ class _ProductPriceScreenState extends State<ProductPriceScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSummaryItem('Tổng đơn giá', totalProducts.toString()),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(

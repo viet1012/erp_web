@@ -218,9 +218,8 @@ class _MasterMenuScreenState extends State<MasterMenuScreen> {
                       const SizedBox(width: 8),
 
                       UserInfoRow(
-                        fullName: "Micheal Ta",
-                        avatarUrl:
-                            "https://res.cloudinary.com/daokpmwm4/image/upload/v1761292096/samples/man-portrait.jpg", // hoặc null
+                        fullName: "Micheal",
+                        avatarUrl: "", // hoặc null
                         avatarRadius: 22,
                         nameStyle: const TextStyle(
                           fontSize: 17,

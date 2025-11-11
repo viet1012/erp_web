@@ -188,23 +188,6 @@ class _ProcessCodeScreenState extends State<ProcessCodeScreen> {
         child: Column(
           children: [
             // SUMMARY
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSummaryItem(
-                      'Tổng công đoạn',
-                      totalProcessCodes.toString(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
 
             // SEARCH + BUTTONS
             Row(

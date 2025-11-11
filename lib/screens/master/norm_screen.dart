@@ -216,21 +216,6 @@ class _NormScreenState extends State<NormScreen> {
         child: Column(
           children: [
             // === SUMMARY ===
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSummaryItem('Tổng Norm', totalNorms.toString()),
-                    // Có thể thêm các summary khác nếu có dữ liệu
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
 
             // === SEARCH + BUTTONS ===
             Row(

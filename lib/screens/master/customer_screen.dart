@@ -248,23 +248,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSummaryItem(
-                      'Tổng khách hàng',
-                      totalCustomers.toString(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(

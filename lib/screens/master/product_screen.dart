@@ -227,31 +227,6 @@ class _DetailScreenState extends State<ProductScreen> {
         child: Column(
           children: [
             // === SUMMARY ===
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildSummaryItem(
-                      'Tổng sản phẩm',
-                      totalProducts.toString(),
-                    ),
-                    _buildSummaryItem(
-                      'Tổng trọng lượng (kg)',
-                      totalWeight.toStringAsFixed(2),
-                    ),
-                    _buildSummaryItem(
-                      'Tổng lệnh SX',
-                      totalSoLuongLenhSanXuat.toString(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
 
             // === SEARCH + BUTTONS ===
             Row(
@@ -375,6 +350,8 @@ class _DetailScreenState extends State<ProductScreen> {
                                     !_sortAscending,
                                   ),
                                 ),
+                                _headerCell('Người tạo'),
+
                                 _headerCell(
                                   'Ngày tạo',
                                   onTap: () => _sort<DateTime>(
@@ -384,7 +361,6 @@ class _DetailScreenState extends State<ProductScreen> {
                                   ),
                                 ),
 
-                                _headerCell('Người tạo'),
                                 _headerCell(
                                   'Ngày cập nhật',
                                   onTap: () => _sort<DateTime>(
